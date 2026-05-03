@@ -9,12 +9,14 @@ You can also include images in this folder and reference them in the markdown. E
 
 ## How it works
 
-Explain how your project works
+It displays stripes in VGA output.  Only a few parameters were tweaked slightly
+from the original VGA playground code.  This is a test.  This is only a test.
 
 ## How to test
 
-Explain how to use your project
+Hook it up to a VGA monitor.
 
 ## External hardware
 
-List external hardware used in your project (e.g. PMOD, LED display, etc), if any
+This project will require the VGA board PMOD.  The project is providing two
+bits per color channel.

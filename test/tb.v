@@ -28,7 +28,7 @@ module tb ();
 `endif
 
   // Replace tt_um_example with your module name:
-  ttsky26b_ocd_sample user_project (
+  tt_um_ocd_sample user_project (
 
       // Include power ports for the Gate Level test:
 `ifdef GL_TEST
