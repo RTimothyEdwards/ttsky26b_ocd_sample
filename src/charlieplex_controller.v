@@ -17,7 +17,7 @@ module charlieplex_controller (
 
     localparam NUM_PINS = 8;
     localparam NUM_LEDS = 56;
-    localparam GREYSCALE_BITS = 3;
+    localparam GREYSCALE_BITS = 2;
     
     // frame buffer: 56 LEDs x 3 bits = 168 bits
     reg [GREYSCALE_BITS-1:0] brightness [0:NUM_LEDS-1];
@@ -38,25 +38,18 @@ module charlieplex_controller (
 
 	    // Test: set all LEDs to be on by default, with a brightness gradient
 	    for (i = 0; i < NUM_LEDS; i = i + 1) begin
-	        brightness[i] <= (i < 7)  ?  7 :
-				 (i < 14) ?  6 :
-				 (i < 21) ?  5 :
-				 (i < 28) ?  4 :
-				 (i < 35) ?  3 :
-				 (i < 42) ?  2 :
-				 (i < 49) ?  1 :
+	        brightness[i] <= (i < 14) ?  3 :
+				 (i < 28) ?  2 :
+				 (i < 42) ?  1 :
 				 0 ;
 	    end
         end else begin
 	    if (uart_valid && !uart_re) begin
 		// UART assume ascii codes
-		// Valid codes:  '0'-'9' and 'A'-'F' = 0-15 is a brightness value.
+		// Valid codes:  '0'-'3' is a brightness value.
 		// 'G' + 0-55 = reset LED index to this value (0 to 55)
 		if (uart_do < 58) begin
 	 	    brightness[uart_led_cnt] <= (uart_do - 48);
-		    uart_led_cnt <= uart_led_cnt + 1;
-		end else if (uart_do < 71) begin
-	 	    brightness[uart_led_cnt] <= (uart_do - 55);
 		    uart_led_cnt <= uart_led_cnt + 1;
 		end else begin
 		    uart_led_cnt <= (uart_do - 71);
@@ -96,7 +89,7 @@ module charlieplex_controller (
             on_cnt <= 0;
 	    base_cnt <= 0;
         end else begin
-            if (on_cnt == 3'b111 && base_cnt == 6'b111111) begin
+            if (on_cnt == 2'b11 && base_cnt == 6'b111111) begin
 		led_on <= 1'b0;
 		base_cnt <= 0;
 		on_cnt <= 0;

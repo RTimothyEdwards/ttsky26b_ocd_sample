@@ -76,7 +76,7 @@ while (k != 'q'):
     if k == '1':
         print("Setting all LEDs on")
         # Write 56 bytes
-        port.write('GFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF')
+        port.write('G33333333333333333333333333333333333333333333333333333333')
 
     elif k == '2':
         print("Setting all LEDs off")
@@ -97,7 +97,7 @@ while (k != 'q'):
 
     elif k == '4':
         print("Setting LED gradient")
-        d = '1234567'
+        d = '1112233'
         e = 0.0
         for x in range(0, 8):
             for y in range(0, 7):
