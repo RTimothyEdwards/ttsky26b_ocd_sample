@@ -97,7 +97,7 @@ while (k != 'q'):
 
     elif k == '4':
         print("Setting LED gradient")
-        d = '1379BDF'
+        d = '1234567'
         e = 0.0
         for x in range(0, 8):
             for y in range(0, 7):
