@@ -6,7 +6,9 @@ SIM ?= icarus
 FST ?= -fst # Use more efficient FST format
 TOPLEVEL_LANG ?= verilog
 SRC_DIR = $(PWD)/../src
-PROJECT_SOURCES = project.v hvsync_generator.v
+PROJECT_SOURCES = tt_um_ocd_charlieplex.v
+PROJECT_SOURCES += charlieplex_controller.v
+PROJECT_SOURCES += simpleuart.v
 
 ifneq ($(GATES),yes)
 
