@@ -31,14 +31,11 @@ module simpleuart #(parameter integer DEFAULT_DIV = 5208) (
 	output wire [7:0] reg_dat_do,
 	output reg    	  recv_buf_valid
 );
-	wire [15:0] cfg_divider;
-
 	reg [3:0] recv_state;
 	reg [15:0] recv_divcnt;
 	reg [7:0] recv_pattern;
 	reg [7:0] recv_buf_data;
 
-	assign cfg_divider = DEFAULT_DIV;
 	assign reg_dat_do = recv_buf_valid ? recv_buf_data : ~0;
 
 	always @(posedge clk or negedge resetn) begin
@@ -59,20 +56,20 @@ module simpleuart #(parameter integer DEFAULT_DIV = 5208) (
 					recv_divcnt <= 0;
 				end
 				1: begin
-					if (2*recv_divcnt > cfg_divider) begin
+					if (2*recv_divcnt > DEFAULT_DIV) begin
 						recv_state <= 2;
 						recv_divcnt <= 0;
 					end
 				end
 				10: begin
-					if (recv_divcnt > cfg_divider) begin
+					if (recv_divcnt > DEFAULT_DIV) begin
 						recv_buf_data <= recv_pattern;
 						recv_buf_valid <= 1;
 						recv_state <= 0;
 					end
 				end
 				default: begin
-					if (recv_divcnt > cfg_divider) begin
+					if (recv_divcnt > DEFAULT_DIV) begin
 						recv_pattern <= {ser_rx, recv_pattern[7:1]};
 						recv_state <= recv_state + 1;
 						recv_divcnt <= 0;
