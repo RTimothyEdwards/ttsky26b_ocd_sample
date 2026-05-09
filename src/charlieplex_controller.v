@@ -31,8 +31,7 @@ module charlieplex_controller (
 
     integer i, j;
     
-    // always @(posedge clk or negedge rst_n) begin
-    always @(posedge clk) begin
+    always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
             uart_led_cnt <= 0;
 	    uart_re <= 0;
