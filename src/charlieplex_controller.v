@@ -29,7 +29,7 @@ module charlieplex_controller (
     wire	uart_valid;
     reg		uart_re;
 
-    integer i;
+    integer i, j;
     
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -37,7 +37,7 @@ module charlieplex_controller (
 	    uart_re <= 0;
 
 	    // Test: set all LEDs to be on by default, with a brightness gradient
-	    for (i = 0; i < NUM_LEDS; i = i + 1)
+	    for (i = 0; i < NUM_LEDS; i = i + 1) begin
 	        brightness[i] <= (i < 7)  ? 15 :
 				 (i < 14) ? 11 :
 				 (i < 21) ?  8 :
@@ -46,7 +46,7 @@ module charlieplex_controller (
 				 (i < 42) ?  3 :
 				 (i < 49) ?  2 :
 				 1 ;
-
+	    end
         end else begin
 	    if (uart_valid && !uart_re) begin
 		// UART assume ascii codes
@@ -137,24 +137,21 @@ module charlieplex_controller (
     // output generation
     
     always @(*) begin
+	// default:  pin stays Hi-Z (oe=0)
+	led_out = 8'b0;
+	led_oe = 8'b0;
+
         if (led_on) begin
             // drive anode HIGH, cathode LOW, others Hi-Z
-            for (i = 0; i < 8; i = i + 1) begin
-                if (i == anode_pin) begin
-                    led_out[i] <= 1'b1;
-                    led_oe[i] <= 1'b1;
-                end else if (i == cathode_pin) begin
-                    led_out[i] <= 1'b0;
-                    led_oe[i] <= 1'b1;
-                end else begin
-                    // default:  pin stays Hi-Z (oe=0)
-        	    led_out[i] <= 1'b0;
-		    led_oe[i] <= 1'b0;
+            for (j = 0; j < 8; j = j + 1) begin
+                if (j == anode_pin) begin
+                    led_out[j] = 1'b1;
+                    led_oe[j] = 1'b1;
+                end else if (j == cathode_pin) begin
+                    led_out[j] = 1'b0;
+                    led_oe[j] = 1'b1;
 		end
             end
-        end else begin
-	    led_out <= 8'b0;
-	    led_oe <= 8'b0;
 	end
     end
 
