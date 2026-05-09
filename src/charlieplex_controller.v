@@ -137,23 +137,25 @@ module charlieplex_controller (
     // output generation
     
     always @(*) begin
-        // default: all pins Hi-Z
-        led_out = 8'b0;
-        led_oe = 8'b0;
-        
         if (led_on) begin
             // drive anode HIGH, cathode LOW, others Hi-Z
             for (i = 0; i < 8; i = i + 1) begin
                 if (i == anode_pin) begin
-                    led_out[i] = 1'b1;
-                    led_oe[i] = 1'b1;
+                    led_out[i] <= 1'b1;
+                    led_oe[i] <= 1'b1;
                 end else if (i == cathode_pin) begin
-                    led_out[i] = 1'b0;
-                    led_oe[i] = 1'b1;
-                end
-                // else stays Hi-Z (oe=0)
+                    led_out[i] <= 1'b0;
+                    led_oe[i] <= 1'b1;
+                end else begin
+                    // default:  pin stays Hi-Z (oe=0)
+        	    led_out[i] <= 1'b0;
+		    led_oe[i] <= 1'b0;
+		end
             end
-        end
+        end else begin
+	    led_out <= 8'b0;
+	    led_oe <= 8'b0;
+	end
     end
 
 endmodule
