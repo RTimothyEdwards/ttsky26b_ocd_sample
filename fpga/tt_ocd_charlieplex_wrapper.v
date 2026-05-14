@@ -44,6 +44,7 @@ module tt_ocd_charlieplex_wrapper (
     wire [7:0] uio_oe;
     wire [7:0] uio_in;
     wire [7:0] uio_out;
+    wire [1:0] nc;		// Internally unconnected signal
 
     assign ser_tx_out = 1'b0;	// No UART output
 
@@ -51,14 +52,18 @@ module tt_ocd_charlieplex_wrapper (
 
     tt_um_ocd_charlieplex project (
 	.ui_in({ui_in[7:1], ser_rx_in}),	// 8-bit input
-	.uo_out(uo_out),	// 8-bit output (not used)
+	.uo_out({uo_out[7:2], nc}),	// 8-bit output (not used)
 	.uio_in(uio_in),	// 8-bit bidirectional (in)
 	.uio_out(uio_out),	// 8-bit bidirectional (out)
 	.uio_oe(uio_oe),	// 8-bit bidirectional (enable)
 	.ena(1'b1),		// project enable (not used)
-	.clk(clk2),		// halved clock
+	.clk(clk2),		// 1/10 rate clock
 	.rst_n(rst_n)		// inverted reset
     );
+
+    // Diagnostic output (for debugging)
+    assign uo_out[0] = ser_rx_in;
+    assign uo_out[1] = clk2;
 
     // Handle bidirectional I/Os
     generate
@@ -68,12 +73,21 @@ module tt_ocd_charlieplex_wrapper (
     endgenerate
     assign uio_in = uio_inout;
 
-    // Halve the clock
+    // Divide the clock by 10 to match the specified Tiny Tapeout
+    // 10MHz clock.
+
+    reg [2:0] counter;
 
     always @(posedge clk) begin
 	if (rst_n) begin
-	    clk2 <= ~clk2;
+	    if (counter == 4) begin
+		clk2 <= ~clk2;
+		counter <= 0;
+	    end else begin
+		counter <= counter + 1;
+	    end
 	end else begin
+	    counter <= 0;
 	    clk2 <= 0;
 	end
     end

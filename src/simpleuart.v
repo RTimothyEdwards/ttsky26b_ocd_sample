@@ -23,7 +23,7 @@
  * baud operation.  Data values limited to 8 bits.
  */
 
-module simpleuart #(parameter integer DEFAULT_DIV = 5208) (
+module simpleuart #(parameter integer DEFAULT_DIV = 1041) (
 	input  wire 	  clk,
 	input  wire 	  resetn,
 	input  wire 	  ser_rx,
@@ -32,7 +32,7 @@ module simpleuart #(parameter integer DEFAULT_DIV = 5208) (
 	output reg    	  recv_buf_valid
 );
 	reg [3:0] recv_state;
-	reg [15:0] recv_divcnt;
+	reg [10:0] recv_divcnt;
 	reg [7:0] recv_pattern;
 	reg [7:0] recv_buf_data;
 
