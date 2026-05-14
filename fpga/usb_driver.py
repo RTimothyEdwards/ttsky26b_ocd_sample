@@ -41,14 +41,6 @@ else:
 # baud rate to 9600 baud.
 port = pyftdi.serialext.serial_for_url(gooddevs[0], baudrate=9600)
 
-remap = [ 6,  5,  4,  3,  2,  1,  0,  7,
-	 13, 12, 11, 10,  9,  8, 15, 14,
-	 20, 19, 18, 17, 16, 23, 22, 21,
-	 27, 26, 25, 24, 31, 30, 29, 28,
-	 34, 33, 32, 39, 38, 37, 36, 35,
-	 41, 40, 47, 46, 45, 44, 43, 42,
-	 48, 55, 54, 53, 52, 51, 50, 49]
-
 k = '0'
 while (k != 'q'):
 
@@ -56,7 +48,7 @@ while (k != 'q'):
     print("Select option:")
     print("  (1) all on ")
     print("  (2) all off ")
-    print("  (3) test! ")
+    print("  (3) smiley! ")
     print("  (4) gradient ")
     print("  (5) progressive ones ")
     print("  (6) progressive zeros ")
@@ -76,7 +68,7 @@ while (k != 'q'):
     if k == '1':
         print("Setting all LEDs on")
         # Write 56 bytes
-        port.write('G33333333333333333333333333333333333333333333333333333333')
+        port.write('G77777777777777777777777777777777777777777777777777777777')
 
     elif k == '2':
         print("Setting all LEDs off")
@@ -92,28 +84,28 @@ while (k != 'q'):
         yvals = [1, 1, 2, 2, 4, 5, 5, 5, 5, 4]
         for i in range(0, len(xvals)):
             idx = yvals[i] * 8 + xvals[i]
-            c = chr(71 + remap[idx])
+            c = chr(71 + idx)
             port.write(c + '3')
 
     elif k == '4':
         print("Setting LED gradient")
-        d = '1112233'
+        d = '1234567'
         e = 0.0
         for x in range(0, 8):
             for y in range(0, 7):
                 idx = y * 8 + x
-                c = chr(71 + remap[idx])
+                c = chr(71 + idx)
                 port.write(c + d[y])
 
     elif k == '5':
         print("Progressive ones")
-        for c in remap:
-            port.write(chr(71 + c) + 'E')
+        for c in range(0, 56):
+            port.write(chr(71 + c) + '7')
             time.sleep(0.1)
 
     elif k == '6':
         print("Progressive zeros")
-        for c in remap:
+        for c in range(0, 56):
             port.write(chr(71 + c) + '0')
             time.sleep(0.1)
 
